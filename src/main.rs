@@ -42,7 +42,7 @@ fn main() -> Result<()> {
     if args.relocs {
         for (i, phdr) in loaded.phdrs.iter().enumerate() {
             if phdr.p_type == 0x60000000 {
-                eprintln!("Performing relocations using segment {}", i);
+                println!("Performing relocations using segment {}", i);
                 let reloc_data = loaded.load_segment_raw(i)?;
                 relocate::relocate(
                     &reloc_data,
@@ -81,21 +81,21 @@ fn main() -> Result<()> {
         module_analysis.symbols,
     );
 
-    eprintln!("Analyzing symbols (pass 1)...");
+    println!("Analyzing symbols (pass 1)...");
     analyze::analyze_symbols_pass1(&mut ctx)?;
 
-    eprintln!("Analyzing symbols (pass 2)...");
+    println!("Analyzing symbols (pass 2)...");
     analyze::analyze_symbols_pass2(&mut ctx)?;
 
-    eprintln!("Analyzing arguments...");
+    println!("Analyzing arguments...");
     analyze::analyze_arguments(&mut ctx)?;
 
-    eprintln!("Analyzing code...");
+    println!("Analyzing code...");
     analyze::analyze_code(&mut ctx)?;
 
-    eprintln!("Decompiling...");
+    println!("Decompiling...");
     translate::decompile(&mut ctx, &args.binary)?;
 
-    eprintln!("Finished.");
+    println!("Finished.");
     Ok(())
 }

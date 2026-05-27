@@ -106,12 +106,12 @@ pub fn load_binary(path: &str) -> Result<LoadedBinary> {
     let text_seg = load_segment(&buf, &phdrs[0], segment_infos.first())?;
     let data_seg = load_segment(&buf, &phdrs[1], segment_infos.get(1))?;
 
-    eprintln!(
+    println!(
         "Text segment: vaddr=0x{:08X} size=0x{:X}",
         phdrs[0].p_vaddr,
         text_seg.len()
     );
-    eprintln!(
+    println!(
         "Data segment: vaddr=0x{:08X} size=0x{:X}",
         phdrs[1].p_vaddr,
         data_seg.len()
@@ -210,7 +210,7 @@ fn load_segment(buf: &[u8], phdr: &ElfPhdr, seg_info: Option<&(u64, u64, u64)>) 
             flate2::FlushDecompress::Finish,
         )?;
         if status != flate2::Status::StreamEnd {
-            eprintln!("Warning: segment decompression incomplete: {:?}", status);
+            println!("Warning: segment decompression incomplete: {:?}", status);
         }
         Ok(decompressed)
     } else {

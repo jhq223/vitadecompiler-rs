@@ -159,7 +159,7 @@ pub fn relocate(reloc_data: &[u8], phdrs: &[ElfPhdr], text_seg: &mut [u8], data_
             }
 
             _ => {
-                eprintln!("Unknown relocation code {} at pos {}", r_code, pos);
+                println!("Unknown relocation code {} at pos {}", r_code, pos);
                 pos += entry_size;
                 continue;
             }
@@ -168,7 +168,7 @@ pub fn relocate(reloc_data: &[u8], phdrs: &[ElfPhdr], text_seg: &mut [u8], data_
         if seg_offset + 4 <= segment_data.len() {
             segment_data[seg_offset..seg_offset + 4].copy_from_slice(&value.to_le_bytes());
         } else {
-            eprintln!("Relocation overflows segment at offset {}", seg_offset);
+            println!("Relocation overflows segment at offset {}", seg_offset);
         }
 
         pos += entry_size;

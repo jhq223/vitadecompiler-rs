@@ -90,7 +90,7 @@ fn find_entry_point(text_seg: &[u8], text_addr: u32, initial_entry: u32) -> u32 
         return initial_entry;
     }
 
-    eprintln!("Invalid entrypoint, attempting to find...");
+    println!("Invalid entrypoint, attempting to find...");
     find_by_magic(text_seg, text_addr)
 }
 
@@ -113,8 +113,7 @@ fn find_by_magic(text_seg: &[u8], text_addr: u32) -> u32 {
         ep -= 1;
         if text_seg[ep..].len() >= check.len() && text_seg[ep..ep + check.len()] == check {
             let result = (ep + check.len() - 2) as u32;
-            eprintln!("Found check at offset: 0x{:X}", ep);
-            eprintln!("**Please correct your elf**");
+            println!("ELF has stripped module name, resolved via magic pattern at offset 0x{:X}", ep);
             return text_addr + result;
         }
     }
@@ -148,7 +147,7 @@ pub fn analyze_module(
     let module_name = String::from_utf8_lossy(&mod_info.name)
         .trim_end_matches('\0')
         .to_string();
-    eprintln!("Module name: {}", module_name);
+    println!("Module name: {}", module_name);
 
     let mut symbols: HashMap<u32, Symbol> = HashMap::new();
 
@@ -389,17 +388,15 @@ pub fn analyze_module(
     // Write output files
     std::fs::write(format!("{}.nids.txt", path), &nids_out)?;
     // Write YML alongside the input binary using module name
-    let yml_path = format!(
-        "{}/{}.yml",
-        std::path::Path::new(path)
-            .parent()
-            .unwrap_or(std::path::Path::new("."))
-            .display(),
-        module_name
-    );
+    let yml_path = std::path::Path::new(path)
+        .parent()
+        .unwrap_or(std::path::Path::new("."))
+        .join(format!("{}.yml", module_name))
+        .to_string_lossy()
+        .to_string();
     std::fs::write(&yml_path, &yml_out)?;
-    eprintln!("Exported NIDS file to: {}.nids.txt", path);
-    eprintln!("Exported db_lookup file to: {}", yml_path);
+    println!("Exported NIDS file to: {}.nids.txt", path);
+    println!("Exported db_lookup file to: {}", yml_path);
 
     Ok(ModuleAnalysis {
         symbols,

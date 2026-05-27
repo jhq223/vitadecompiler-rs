@@ -23,8 +23,8 @@ pub fn decompile(ctx: &mut Context, out_path: &str) -> Result<(), anyhow::Error>
     let mut fout = std::fs::File::create(format!("{}.c", out_path))?;
     let mut fheader = std::fs::File::create(format!("{}.h", out_path))?;
 
-    eprintln!("Exporting source file to: {}.c", out_path);
-    eprintln!("Exporting header file to: {}.h", out_path);
+    println!("Exporting source file to: {}.c", out_path);
+    println!("Exporting header file to: {}.h", out_path);
 
     let mut first_import = true;
     let mut first = true;
