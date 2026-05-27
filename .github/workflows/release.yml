@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -18,8 +21,21 @@ jobs:
       - name: Build release
         run: cargo build --release
 
+      - name: Package
+        shell: bash
+        run: |
+          ARCHIVE="vitadecompiler-${{ github.ref_name }}-windows-x86_64.zip"
+          cp target/release/vitadecompiler.exe .
+          cp README.md .
+          cp LICENSE .
+          7z a "$ARCHIVE" vitadecompiler.exe README.md LICENSE
+          sha256sum "$ARCHIVE" > checksums.txt
+          echo "ARCHIVE=$ARCHIVE" >> $GITHUB_ENV
+
       - name: Upload to release
         uses: softprops/action-gh-release@v2
         with:
-          files: target/release/vitadecompiler.exe
+          files: |
+            ${{ env.ARCHIVE }}
+            checksums.txt
           generate_release_notes: true
