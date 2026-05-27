@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          target: x86_64-pc-windows-msvc
+
+      - name: Build release
+        run: cargo build --release
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/release/vitadecompiler.exe
+          generate_release_notes: true

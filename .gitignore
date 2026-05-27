@@ -1,3 +1,4 @@
 /target
 *.yml
 !.github/
+!.github/**/*.yml
