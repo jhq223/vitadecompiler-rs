@@ -26,8 +26,6 @@ jobs:
         run: |
           ARCHIVE="vitadecompiler-${{ github.ref_name }}-windows-x86_64.zip"
           cp target/release/vitadecompiler.exe .
-          cp README.md .
-          cp LICENSE .
           7z a "$ARCHIVE" vitadecompiler.exe README.md LICENSE
           sha256sum "$ARCHIVE" > checksums.txt
           echo "ARCHIVE=$ARCHIVE" >> $GITHUB_ENV
